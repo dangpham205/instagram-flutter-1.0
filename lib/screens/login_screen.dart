@@ -153,7 +153,15 @@ class UserPassword extends StatelessWidget {
       textInputAction: TextInputAction.go,
       controller: _passwordController,
       decoration: const InputDecoration(
+        label: Text('Password'),
+        labelStyle: TextStyle(fontSize: 14, color: Colors.purple, fontWeight: FontWeight.bold),
         hintText: 'Enter Password',
+        focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.purple, width: 1.0),
+            ),
+        enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.0),
+            ),
       ),
       keyboardType: TextInputType.text,
       obscureText: true
@@ -175,7 +183,15 @@ class UserEmail extends StatelessWidget {
       textInputAction: TextInputAction.next,
       controller: _emailController,
       decoration: const InputDecoration(
-        hintText: 'Enter Email or Username',
+        label: Text('Email'),
+        labelStyle: TextStyle(fontSize: 14, color: Colors.purple, fontWeight: FontWeight.bold),
+        hintText: 'Enter Email',
+        focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.purple, width: 1.0),
+            ),
+        enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.0),
+            ),
       ),
       keyboardType: TextInputType.emailAddress,
     );

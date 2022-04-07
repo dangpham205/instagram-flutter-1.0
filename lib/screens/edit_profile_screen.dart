@@ -21,10 +21,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var userData = {};
   bool isLoading = false;
   Uint8List? _avatar;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isUpdating = false;
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _bioController = TextEditingController();
+  final bool _isUpdating = false;
+  String userEmail = '';
+  String userName = '';
+  String userBio = '';
 
 
   @override
@@ -36,9 +38,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     super.dispose();
-    _emailController.dispose();
     _usernameController.dispose();      //very important
-    _passwordController.dispose();
+    _bioController.dispose();
   }
 
   void selectAvatar() async {
@@ -62,6 +63,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .doc(widget.uid)
         .get();
     userData = userSnapShot.data()!;
+    userEmail = userData['email'].toString();
+    userName = userData['username'].toString();
+    userBio = userData['bio'].toString();
+    _usernameController = TextEditingController(text: userName);
+    _bioController = TextEditingController(text: userBio);
 
     setState(() {
       isLoading = false;
@@ -75,7 +81,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     )
     :
     Scaffold(
-      appBar: AppBar(backgroundColor: mobileBackgroundColor),
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        elevation: 1,
+        title: const Text('Update Profile'),
+      ),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -86,9 +96,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,    //center tat ca children theo chieu truc cross ==> chieu ngang
               children: [
-                Flexible(child: Container(), flex: 2,),
+                Flexible(child: Container(), flex: 0,),
                 // SvgPicture.asset('assets/ic_instagram.svg', color: primaryColor, height: 48,),
-                const SizedBox(height: 36,),
+                const SizedBox(height: 18,),
                 Stack(
                 children:  [
                   _avatar != null ?     //nếu image khác null thì hiện image đó lên
@@ -111,11 +121,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
                 const SizedBox(height: 28,),
+                UserEmail(userEmail: userEmail),
+                const SizedBox(height: 28,),
                 UserName(usernameController: _usernameController),
                 const SizedBox(height: 28,),
-                UserEmail(emailController: _emailController),
-                const SizedBox(height: 28,),
-                UserPassword(passwordController: _passwordController),
+                UserBio(passwordController: _bioController),
                 const SizedBox(height: 28,),
                 InkWell(                        //button login
                   onTap: () {},      //gọi hàm signUpUser
@@ -138,7 +148,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 28,),
-                Flexible(child: Container(), flex: 2,),
+                Flexible(child: Container(), flex: 0,),
                 Row(                    //text de chuyen sang sign up screen
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:  [
@@ -166,8 +176,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 
-class UserPassword extends StatelessWidget {
-  const UserPassword({
+class UserEmail extends StatelessWidget {
+  const UserEmail({
+    Key? key,
+    required this.userEmail,
+  }) : super(key: key);
+
+  final String userEmail;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      decoration: const InputDecoration(
+        label: Text('Email'),
+        labelStyle: TextStyle(fontSize: 16, color: Colors.purple, fontWeight: FontWeight.bold),
+        disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
+            ),
+      ),
+      style: const TextStyle(color: Colors.grey),
+      keyboardType: TextInputType.emailAddress,
+      enabled: false,
+      initialValue: userEmail,
+    );
+  }
+}
+
+class UserBio extends StatelessWidget {
+  const UserBio({
     Key? key,
     required TextEditingController passwordController,
   }) : _passwordController = passwordController, super(key: key);
@@ -176,20 +213,21 @@ class UserPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return TextInput(
-    //     textEditingController: _passwordController,
-    //     hintText: 'Enter Password',
-    //     textInputType: TextInputType.text,
-    //     isPassword: true,
-    // );
     return TextFormField(
       textInputAction: TextInputAction.go,
       controller: _passwordController,
       decoration: const InputDecoration(
-        hintText: 'Enter Password',
+        label: Text('Bio'),
+        labelStyle: TextStyle(fontSize: 16, color: Colors.purple, fontWeight: FontWeight.bold),
+        hintText: 'Enter Username',
+        focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.purple, width: 1.0),
+            ),
+        enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.0),
+            ),
       ),
       keyboardType: TextInputType.text,
-      obscureText: true
     );
   }
 }
@@ -202,48 +240,24 @@ class UserName extends StatelessWidget {
 
   final TextEditingController _usernameController;
 
+
   @override
   Widget build(BuildContext context) {
-    // return TextInput(
-
-    //     textEditingController: _usernameController,
-    //     hintText: 'Enter Username',
-    //     textInputType: TextInputType.text,
-        
-    // );
     return TextFormField(
       textInputAction: TextInputAction.next,
       controller: _usernameController,
       decoration: const InputDecoration(
+        label: Text('Username'),
+        labelStyle: TextStyle(fontSize: 16, color: Colors.purple, fontWeight: FontWeight.bold),
         hintText: 'Enter Username',
+        focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.purple, width: 1.0),
+            ),
+        enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 1.0),
+            ),
       ),
       keyboardType: TextInputType.text,
-    );
-  }
-}
-
-class UserEmail extends StatelessWidget {
-  const UserEmail({
-    Key? key,
-    required TextEditingController emailController,
-  }) : _emailController = emailController, super(key: key);
-
-  final TextEditingController _emailController;
-
-  @override
-  Widget build(BuildContext context) {
-    // return TextInput(
-    //     textEditingController: _emailController,
-    //     hintText: 'Enter Email',
-    //     textInputType: TextInputType.emailAddress,
-    // );
-    return TextFormField(
-      textInputAction: TextInputAction.next,
-      controller: _emailController,
-      decoration: const InputDecoration(
-        hintText: 'Enter Email',
-      ),
-      keyboardType: TextInputType.emailAddress,
     );
   }
 }
