@@ -50,6 +50,7 @@ class AuthMethods {
           );
           //lưu thông tin username, avatar vô db
           await _firestore.collection('users').doc(userCredential.user!.uid).set(user.toJSON());
+          await _auth.signInWithEmailAndPassword(email: email, password: password);             //Bắt buộc phải có
           res = 'Sign Up Succeed';
         }
       } on FirebaseAuthException catch (error){

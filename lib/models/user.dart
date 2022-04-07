@@ -33,7 +33,8 @@ class User{
   // User.fromSnapShot()
   static User fromSnapShot(DocumentSnapshot snapshot) {
 
-    var snap = snapshot.data() as Map<String, dynamic>;   //cast snapshot thành dạng Map
+    
+    var snap = snapshot.data()! as Map<String, dynamic>;   //cast snapshot thành dạng Map
 
     return User(    //chuyển thành object User và return
       uid: snap['uid'],
