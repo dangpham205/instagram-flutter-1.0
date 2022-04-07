@@ -175,7 +175,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 18,
+                    radius: 28,
                     backgroundImage: NetworkImage(
                       user!.photoUrl,
                     ),   
@@ -197,7 +197,7 @@ class _UploadScreenState extends State<UploadScreen> {
               const Divider(color: Colors.white,),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height*0.4,
+                height: MediaQuery.of(context).size.height*0.5,
                 child: AspectRatio(
                   aspectRatio: 487/451,
                   child: Container(

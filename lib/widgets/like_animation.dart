@@ -61,8 +61,8 @@ class _LikeAnimationState extends State<LikeAnimation> with SingleTickerProvider
 
   @override
   void dispose() {
+    _controller.dispose();          //cái này bắt buộc phải gọi trc, không thì sẽ có lỗi
     super.dispose();
-    _controller.dispose();
   }
 
   @override

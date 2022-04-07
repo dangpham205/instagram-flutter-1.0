@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/constants/colors.dart';
 import 'package:instagram/methods/auth_methods.dart';
 import 'package:instagram/methods/firestore_methods.dart';
+import 'package:instagram/screens/edit_profile_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/widgets/profile_button.dart';
 
@@ -144,7 +145,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderColor: Colors.white,
                       buttonText: 'EDIT PROFILE',
                       buttonTextColor: Colors.white,
-                      function: () {},)
+                      function: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(uid: widget.uid),
+                          ),
+                        );
+                      },)
                   : isFollowing ? ProfileButton(      //nếu follow = true (đang follow) thì hiện nút unfollow
                       buttonColor: Colors.white,
                       borderColor: Colors.white,

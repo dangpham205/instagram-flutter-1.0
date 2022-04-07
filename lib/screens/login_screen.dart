@@ -5,7 +5,6 @@ import 'package:instagram/constants/colors.dart';
 import 'package:instagram/responsive/responsive_layout.dart';
 import 'package:instagram/screens/signup_screen.dart';
 import 'package:instagram/methods/auth_methods.dart';
-import 'package:instagram/widgets/input_text.dart';
 
 import '../constants/utils.dart';
 import '../responsive/mobile_screen_layout.dart';
@@ -144,11 +143,20 @@ class UserPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextInput(
-        textEditingController: _passwordController,
+    // return TextInput(
+    //     textEditingController: _passwordController,
+    //     hintText: 'Enter Password',
+    //     textInputType: TextInputType.text,
+    //     isPassword: true,
+    // );
+    return TextFormField(
+      textInputAction: TextInputAction.go,
+      controller: _passwordController,
+      decoration: const InputDecoration(
         hintText: 'Enter Password',
-        textInputType: TextInputType.text,
-        isPassword: true,
+      ),
+      keyboardType: TextInputType.text,
+      obscureText: true
     );
   }
 }
@@ -163,10 +171,13 @@ class UserEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextInput(
-        textEditingController: _emailController,
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      controller: _emailController,
+      decoration: const InputDecoration(
         hintText: 'Enter Email or Username',
-        textInputType: TextInputType.emailAddress,
+      ),
+      keyboardType: TextInputType.emailAddress,
     );
   }
 }

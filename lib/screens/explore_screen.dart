@@ -98,12 +98,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               crossAxisCount: 3, 
               itemCount: (snapshot.data! as dynamic).docs.length,
               itemBuilder: (context, index) => 
-                Stack(
-                  children:[ 
-                    Container(color: const Color.fromARGB(255, 19, 19, 19),),
-                    Center(child: Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.contain,)),
-                  ],
-              ), 
+                    Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.cover,),
               staggeredTileBuilder: (index) => StaggeredTile.count(
                 (index % 7 == 0) ? 2 : 1,     //cross axis cells count
                 (index % 7 == 0) ? 2 : 1,     //main axis cells count

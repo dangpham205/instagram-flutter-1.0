@@ -1,29 +1,37 @@
 import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram/constants/colors.dart';
-import 'package:instagram/constants/utils.dart';
-import 'package:instagram/methods/auth_methods.dart';
-import '../responsive/mobile_screen_layout.dart';
-import '../responsive/responsive_layout.dart';
-import '../responsive/web_screen_layout.dart';
-import 'login_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({ Key? key }) : super(key: key);
+import '../constants/colors.dart';
+import '../constants/utils.dart';
+
+class EditProfileScreen extends StatefulWidget {
+  final String uid;
+  const EditProfileScreen({ Key? key, required this.uid }) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen> {
+
+  var userData = {};
+  bool isLoading = false;
+  Uint8List? _avatar;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  Uint8List? _avatar;
-  bool _isLoading = false;
+  bool _isUpdating = false;
 
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
 
   @override
   void dispose() {
@@ -45,58 +53,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void signUpUser() async {        
+  getUserData() async {
     setState(() {
-      _isLoading = true;
-    });        
-
-    String res = await AuthMethods().signUp(
-      email: _emailController.text,
-      username: _usernameController.text,
-      password: _passwordController.text,
-      image: _avatar);
-    if (res != 'Sign Up Succeed'){
-      showSnackBar(context, res);
-    }
-    else{
-      Navigator.of(context).pushReplacement(      //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
-      MaterialPageRoute(
-        builder: (context) => const ResponsiveLayout(
-                                                webScreenLayout: WebScreenLayout(),
-                                                mobileScreenLayout: MobileScreenLayout(),
-                                              ),
-      ),
-    );
-    }
+      isLoading = true;
+    });
+    var userSnapShot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get();
+    userData = userSnapShot.data()!;
 
     setState(() {
-      _isLoading = false;
-    }); 
+      isLoading = false;
+    });
   }
-
-  void navigateToLogIn() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
-      ),
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading ? const Center(
+      child: CircularProgressIndicator(),
+    )
+    :
+    Scaffold(
+      appBar: AppBar(backgroundColor: mobileBackgroundColor),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: SafeArea(
-              child: Container(
+            child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             width: double.infinity,   //return width cua man hinh
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,    //center tat ca children theo chieu truc cross ==> chieu ngang
               children: [
                 Flexible(child: Container(), flex: 2,),
-                SvgPicture.asset('assets/ic_instagram.svg', color: primaryColor, height: 48,),
+                // SvgPicture.asset('assets/ic_instagram.svg', color: primaryColor, height: 48,),
                 const SizedBox(height: 36,),
                 Stack(
                 children:  [
@@ -105,9 +96,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     radius: 64,
                     backgroundImage: MemoryImage(_avatar!),
                   )
-                  : const CircleAvatar(   //còn không thì hiện avt mặc định
+                  : CircleAvatar(   //còn không thì hiện avt mặc định
                     radius: 64,
-                    backgroundImage: NetworkImage('https://images.squarespace-cdn.com/content/v1/54b7b93ce4b0a3e130d5d232/1519987020970-8IQ7F6Z61LLBCX85A65S/icon.png?format=1000w'),
+                    backgroundImage: NetworkImage(userData['photoUrl'].toString()),
                   ),   //avatar mặc định
                   Positioned(     //nút thêm ảnh avatar
                     bottom: -6,
@@ -127,13 +118,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 UserPassword(passwordController: _passwordController),
                 const SizedBox(height: 28,),
                 InkWell(                        //button login
-                  onTap: signUpUser,      //gọi hàm signUpUser
+                  onTap: () {},      //gọi hàm signUpUser
                   child: Container(        
-                    child: _isLoading
+                    child: _isUpdating
                         ? const Center(         //nếu mà bấm sign up thì sẽ hiện vòng load
                             child: CircularProgressIndicator(color: Colors.white,),
                           ) 
-                        : const Text('SIGN UP'),  //sign up xong thì sẽ quay lại hiện chữ trong button (đọc hàm signUpUser)
+                        : const Text('UPDATE'),  //sign up xong thì sẽ quay lại hiện chữ trong button (đọc hàm signUpUser)
                     alignment: Alignment.center,
                     width: double.infinity,
                     height: 46,
@@ -154,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const Text("Already have an account?"),
                     const SizedBox(width: 10,),
                     GestureDetector(
-                      onTap: navigateToLogIn,
+                      onTap: () {},
                       child: const Text(
                         'Log In',
                         style: TextStyle(
@@ -256,4 +247,3 @@ class UserEmail extends StatelessWidget {
     );
   }
 }
-
