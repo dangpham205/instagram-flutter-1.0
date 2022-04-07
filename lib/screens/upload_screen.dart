@@ -183,6 +183,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width*0.7,
                     child: TextField(
+                      textInputAction: TextInputAction.newline,
                       controller: _descriptionController,
                       decoration: const InputDecoration(
                         hintText: "What's on your mind?",

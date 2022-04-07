@@ -27,6 +27,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: TextFormField(
+          textInputAction: TextInputAction.search,
           controller: _searchController,
           decoration: const InputDecoration(
             labelText: 'Search',
@@ -37,6 +38,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
             });
           },
         ),
+        actions: [
+          showSearchResults ? IconButton(                                   //tawts phaanf ket qua cua search
+            onPressed: () {
+              setState(() {
+              });
+            },
+            icon: const Icon(Icons.close)
+          ) 
+          : const SizedBox()
+        ],
       ),
       body: showSearchResults ? FutureBuilder(
               future: FirebaseFirestore.instance
