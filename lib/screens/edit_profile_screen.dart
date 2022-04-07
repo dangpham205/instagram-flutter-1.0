@@ -4,9 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/responsive/responsive_layout.dart';
+import 'package:instagram/screens/profile_screen.dart';
 
 import '../constants/colors.dart';
 import '../constants/utils.dart';
+import '../methods/auth_methods.dart';
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/web_screen_layout.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String uid;
@@ -20,10 +25,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   var userData = {};
   bool isLoading = false;
+  bool _isUpdating = false;
   Uint8List? _avatar;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
-  final bool _isUpdating = false;
   String userEmail = '';
   String userName = '';
   String userBio = '';
@@ -54,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  getUserData() async {
+  getUserData() async {                                         //LẤY USERDATA TỪ UID TRUYỀN VÔ
     setState(() {
       isLoading = true;
     });
@@ -72,6 +77,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  void updateUser() async {                                   // khi bấm vào nút UPDATE
+    setState(() {
+      _isUpdating = true;
+    });  
+
+    String res = await AuthMethods().updateProfile(
+      uid: widget.uid,
+      username: _usernameController.text,
+      bio: _bioController.text ,
+      oldAvatar: userData['photoUrl'].toString(),
+      image: _avatar);
+    if (res != 'Update Succeed'){
+      showSnackBar(context, res);
+    }
+    else{
+      Navigator.of(context).pop();
+    }
+
+    setState(() {
+      _isUpdating = false;
+    }); 
   }
   
   @override
@@ -128,13 +156,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 UserBio(passwordController: _bioController),
                 const SizedBox(height: 28,),
                 InkWell(                        //button login
-                  onTap: () {},      //gọi hàm signUpUser
+                  onTap: updateUser,      //gọi hàm update profile
                   child: Container(        
                     child: _isUpdating
-                        ? const Center(         //nếu mà bấm sign up thì sẽ hiện vòng load
+                        ? const Center(         //nếu mà bấm update thì sẽ hiện vòng load
                             child: CircularProgressIndicator(color: Colors.white,),
                           ) 
-                        : const Text('UPDATE'),  //sign up xong thì sẽ quay lại hiện chữ trong button (đọc hàm signUpUser)
+                        : const Text('UPDATE'),  //update xong thì sẽ quay lại hiện chữ trong button
                     alignment: Alignment.center,
                     width: double.infinity,
                     height: 46,

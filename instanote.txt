@@ -1,0 +1,51 @@
+get sha1:
+cd tới android
+gradlew signingReport 
+
+chỉ có thể override setstate trong class state
+
+trong firebaseStorage
+.ref().child(folderName).child(userId):
+ref là con trỏ dùng để chỉ tới folder folderName/userId
+
+muốn upload lên storage firebase 
+thì phải thay đổi rules trong tab storage trước
+
+sẽ không dùng navigator.push
+vì nó sẽ kh làm đc chức năng ghi nhớ đăng nhập
+
+overflow
+lúc sign up kh kéo xuống để nhìn đc
+
+install uuid
+để tạo unique id cho các bài post, 
+còn id của user thì firebase đã tạo cho nên lúc đó kh cần tự tạo
+
+provider :
+getUserInfo()  : auth_methods
+	lấy thằng current User ra
+	lấy snapshot đang chỉ tới document của thằng current user
+	chuyển thành object User và return
+
+về comments:
+cũng sẽ làm giống users hay posts
+trong doc của bài post sẽ tạo ra 1 collection comments
+xong trong collections đó sẽ có những doc comment có 
+identifier là commentId
+
+stream builder sẽ sử dụng để lắng nghe real time
+với những thứ kh cần hiển thị real time thì sd future builder
+vd như show tất cả post trong profile
+
+doc của post chỉ nên chứa:
+	des
+	uid
+	uploadDate
+	likes,
+	postID
+	postUrl
+	avatar
+không cần username vì sau nếu user update lại
+username thì prop đó trong post không sửa theo đc
+cái đó dựa vào uid để lấy ra
+

@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //     });
   // }
 
-  getUserData() async {
+  Future getUserData() async {
     setState(() {
       isLoading = true;
     });
@@ -91,127 +91,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ) : const SizedBox(),
         ],
       ),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              CircleAvatar(
-                radius: 52,
-                backgroundColor: Colors.grey,
-                backgroundImage: NetworkImage(userData['photoUrl'].toString()),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                userData['username'].toString(),
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              userData['bio'].toString().isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32, right: 32, bottom: 12),
-                      child: Text(
-                        userData['bio'].toString(),
-                        textAlign: TextAlign.justify,
-                        style: const TextStyle(fontWeight: FontWeight.w300),
+      body: RefreshIndicator(
+        onRefresh: () async{
+          getUserData();
+        },
+        child: ListView(
+          children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  radius: 52,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(userData['photoUrl'].toString()),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                Text(
+                  userData['username'].toString(),
+                  style:
+                      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                userData['bio'].toString().isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                            left: 32, right: 32, bottom: 12),
+                        child: Text(
+                          userData['bio'].toString(),
+                          textAlign: TextAlign.justify,
+                          style: const TextStyle(fontWeight: FontWeight.w300),
+                        ),
+                      )
+                    : const SizedBox(
+                        height: 16,
                       ),
-                    )
-                  : const SizedBox(
-                      height: 16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildProfileColumn('Posts', postCount),
+                    const SizedBox(
+                      width: 16,
                     ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildProfileColumn('Posts', postCount),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  buildProfileColumn('Followers', followerCount),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  buildProfileColumn('Following', followingCount),
-                ],
-              ),
-              const SizedBox( height: 12,),
-              FirebaseAuth.instance.currentUser!.uid == widget.uid
-                  ? ProfileButton(                    //nếu user truyền vô screen là current user (chính chủ) thì hiện nút edit profile
-                      buttonColor: Colors.grey,
-                      borderColor: Colors.white,
-                      buttonText: 'EDIT PROFILE',
-                      buttonTextColor: Colors.white,
-                      function: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditProfileScreen(uid: widget.uid),
-                          ),
-                        );
-                      },)
-                  : isFollowing ? ProfileButton(      //nếu follow = true (đang follow) thì hiện nút unfollow
-                      buttonColor: Colors.white,
-                      borderColor: Colors.white,
-                      buttonText: 'UNFOLLOW',
-                      buttonTextColor: Colors.black,
-                      function: () async {
-                        await FirestoreMethods().followUser(FirebaseAuth.instance.currentUser!.uid, widget.uid);
-                        setState(() {
-                          isFollowing = false;
-                          followerCount--;
-                        });
-                      },)
-                  : ProfileButton(                          //còn không thì hiện nút follow
-                      buttonColor: Colors.blueAccent,
-                      borderColor: Colors.white,
-                      buttonText: 'FOLLOW',
-                      buttonTextColor: Colors.white,
-                      function: () async {
-                        await FirestoreMethods().followUser(FirebaseAuth.instance.currentUser!.uid, widget.uid);
-                        setState(() {
-                          isFollowing = true;
-                          followerCount++;
-                        });
-                      },
+                    buildProfileColumn('Followers', followerCount),
+                    const SizedBox(
+                      width: 16,
                     ),
-              const SizedBox( height: 16,),
-              FutureBuilder(
-                future: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).get(),
-                builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(),);
-                  }
-                  else{
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.docs.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                        childAspectRatio: 1,
-                      ), 
-                      itemBuilder: (context, index) {
-                        return Container(
-                          child: Image(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(snapshot.data!.docs[index]
-                                      .data()['postUrl']
-                                      .toString(),
+                    buildProfileColumn('Following', followingCount),
+                  ],
+                ),
+                const SizedBox( height: 12,),
+                FirebaseAuth.instance.currentUser!.uid == widget.uid
+                    ? ProfileButton(                    //nếu user truyền vô screen là current user (chính chủ) thì hiện nút edit profile
+                        buttonColor: Colors.grey,
+                        borderColor: Colors.white,
+                        buttonText: 'EDIT PROFILE',
+                        buttonTextColor: Colors.white,
+                        function: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditProfileScreen(uid: widget.uid),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-        ],
+                          );
+                        },)
+                    : isFollowing ? ProfileButton(      //nếu follow = true (đang follow) thì hiện nút unfollow
+                        buttonColor: Colors.white,
+                        borderColor: Colors.white,
+                        buttonText: 'UNFOLLOW',
+                        buttonTextColor: Colors.black,
+                        function: () async {
+                          await FirestoreMethods().followUser(FirebaseAuth.instance.currentUser!.uid, widget.uid);
+                          setState(() {
+                            isFollowing = false;
+                            followerCount--;
+                          });
+                        },)
+                    : ProfileButton(                          //còn không thì hiện nút follow
+                        buttonColor: Colors.blueAccent,
+                        borderColor: Colors.white,
+                        buttonText: 'FOLLOW',
+                        buttonTextColor: Colors.white,
+                        function: () async {
+                          await FirestoreMethods().followUser(FirebaseAuth.instance.currentUser!.uid, widget.uid);
+                          setState(() {
+                            isFollowing = true;
+                            followerCount++;
+                          });
+                        },
+                      ),
+                const SizedBox( height: 16,),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).get(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator(),);
+                    }
+                    else{
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                          childAspectRatio: 1,
+                        ), 
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: Image(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(snapshot.data!.docs[index]
+                                        .data()['postUrl']
+                                        .toString(),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

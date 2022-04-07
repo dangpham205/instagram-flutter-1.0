@@ -110,4 +110,34 @@ class AuthMethods {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+
+  Future<String> updateProfile({
+    required String uid,
+    required String username,
+    required String bio,
+    required String oldAvatar,
+    Uint8List? image    
+    }) async {
+      String res = 'Update Failed';
+      String avatarUrl = oldAvatar;
+      try{
+        if (username.isNotEmpty){
+          if (image != null){
+            avatarUrl = await StorageMethods().uploadImgToStorage('avatarPics', image, false);
+          }
+
+          //lưu thông tin username, avatar vô db
+          await _firestore.collection('users').doc(uid).update({
+            'username': username,
+            'bio': bio,
+            'photoUrl': avatarUrl,
+          });
+          res = 'Update Succeed';
+        }
+      } on FirebaseAuthException catch (error){
+        res = error.toString();
+      }
+      return res;
+  }
 }
