@@ -21,11 +21,14 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isLikeDisplaying = false; //mặc định thì like sẽ không hiển thị lên
   int numberOfComments = 0;
+  bool postImageReady = false;
+  String postImageUrl = '';
 
   @override
   void initState() {
     super.initState();
     getNumberOfComments();
+    loadPostImages();
   }
 
   void getNumberOfComments() async {
@@ -37,7 +40,19 @@ class _PostCardState extends State<PostCard> {
     catch(error){
       showSnackBar(context, error.toString());
     }
-    setState(() {});
+    if (mounted){
+      setState(() {});
+    }
+  }
+
+  void loadPostImages() async {
+    setState(() {
+      postImageReady = false;
+    });
+    postImageUrl = await widget.snap['postUrl'];
+    setState(() {
+        postImageReady = true;
+      });
   }
 
   @override
@@ -58,8 +73,8 @@ class _PostCardState extends State<PostCard> {
                 CircleAvatar(
                   //avatar
                   radius: 16,
-                  backgroundImage: NetworkImage(widget
-                      .snap['avatarUrl']), //dùng snap lấy ra avatar của user
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(widget.snap['avatarUrl']), //dùng snap lấy ra avatar của user
                 ),
                 Expanded(
                   //username
@@ -132,11 +147,12 @@ class _PostCardState extends State<PostCard> {
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.4,
                   width: double.infinity,
-                  child: Image.network(
-                    widget.snap['postUrl'],
-                    fit: BoxFit.cover,
+                  child: postImageReady == false ?
+                  const Center(child: Text('Waiting for internet connection', style: TextStyle(color: Colors.white),),)
+                  : Image.network(
+                    postImageUrl,
+                    fit: BoxFit.fitWidth,
                   ), //dùng snap lấy url ảnh bài post
                 ),
                 AnimatedOpacity(
@@ -265,7 +281,13 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentScreen(snap: widget.snap),
+                      ),
+                    );
+                  },
                   child: Container(
                     //VIEW COMMENTS
                     padding: const EdgeInsets.symmetric(vertical: 4),

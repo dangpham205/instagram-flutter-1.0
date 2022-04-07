@@ -89,8 +89,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
               itemBuilder: (context, index) => 
                 Stack(
                   children:[ 
-                    Container(color: Colors.blue,),
-                    Center(child: Image.network((snapshot.data! as dynamic).docs[index]['postUrl'])),
+                    Container(color: const Color.fromARGB(255, 19, 19, 19),),
+                    Center(child: Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.contain,)),
                   ],
               ), 
               staggeredTileBuilder: (index) => StaggeredTile.count(

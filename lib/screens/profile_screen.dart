@@ -143,7 +143,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       buttonColor: Colors.grey,
                       borderColor: Colors.white,
                       buttonText: 'EDIT PROFILE',
-                      buttonTextColor: Colors.white)
+                      buttonTextColor: Colors.white,
+                      function: () {},)
                   : isFollowing ? ProfileButton(      //nếu follow = true (đang follow) thì hiện nút unfollow
                       buttonColor: Colors.white,
                       borderColor: Colors.white,

@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/constants/colors.dart';
-import 'package:instagram/constants/global_variables.dart';
+
+import '../screens/explore_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/upload_screen.dart';
+import '../screens/profile_screen.dart';
 // import 'package:instagram/models/user.dart' as model;        //user của class này trùng tên với instance user của firebase nên phải as
 
 
@@ -55,10 +60,17 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     // user này có thể null vì lúc đầu có thể chưa kết nối tới firebase kịp để get
     return Scaffold(
       body: PageView(
-        children: homeScreenItems,  //trong file global_var //liệt kê các page sẽ có (số lượng tương ứng với số icon dưới thanh nav)
+        children: [
+          const HomeScreen(),
+          const ExploreScreen(),
+          const UploadScreen(),
+          const Text('notiiiiiiiiiiiiiiiiii'),
+          ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
+        ]
+        ,  //liệt kê các page sẽ có (số lượng tương ứng với số icon dưới thanh nav)
         physics: const NeverScrollableScrollPhysics(), //tắt chuyển tab bằng cách kéo ngang
         controller: pageController,     
-        onPageChanged: onPageChanged,   //thay đổi state của _tab bằng index của tab trong list homeScreenItems trong file global _var
+        onPageChanged: onPageChanged,   //thay đổi state của _tab bằng index của tab trong list children ở trên
       ),
       bottomNavigationBar: CupertinoTabBar(
         onTap: tabNavigate,       //dùng để chuyển trang

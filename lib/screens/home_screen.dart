@@ -43,6 +43,7 @@ class HomeScreen extends StatelessWidget {
           }
 
           return ListView.builder(
+            physics: const BouncingScrollPhysics(),
             itemCount: snapshot.data!.docs.length,      //bắt buộc phải truyền vô
             itemBuilder:(context, index) {
               return PostCard(

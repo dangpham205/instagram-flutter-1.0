@@ -9,14 +9,14 @@ import 'package:instagram/models/user.dart';
 import 'package:instagram/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class PostScreen extends StatefulWidget {
-  const PostScreen({ Key? key }) : super(key: key);
+class UploadScreen extends StatefulWidget {
+  const UploadScreen({ Key? key }) : super(key: key);
 
   @override
-  State<PostScreen> createState() => _PostScreenState();
+  State<UploadScreen> createState() => _UploadScreenState();
 }
 
-class _PostScreenState extends State<PostScreen> {
+class _UploadScreenState extends State<UploadScreen> {
   
   Uint8List? image;
   Uint8List? _image;
@@ -201,7 +201,7 @@ class _PostScreenState extends State<PostScreen> {
                   aspectRatio: 487/451,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: blueColor,
+                      color: const Color.fromARGB(255, 19, 19, 19),
                       image: DecorationImage(
                         image: MemoryImage(_image!),
                         fit: BoxFit.contain,
