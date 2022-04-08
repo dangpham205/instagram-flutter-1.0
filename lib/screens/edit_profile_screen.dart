@@ -2,16 +2,10 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram/responsive/responsive_layout.dart';
-import 'package:instagram/screens/profile_screen.dart';
-
 import '../constants/colors.dart';
 import '../constants/utils.dart';
 import '../methods/auth_methods.dart';
-import '../responsive/mobile_screen_layout.dart';
-import '../responsive/web_screen_layout.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String uid;

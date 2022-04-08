@@ -6,6 +6,7 @@ import 'package:instagram/methods/auth_methods.dart';
 import 'package:instagram/methods/firestore_methods.dart';
 import 'package:instagram/screens/edit_profile_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
+import 'package:instagram/screens/post_detail_screen.dart';
 import 'package:instagram/widgets/profile_button.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -65,10 +66,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     isFollowing = userSnapShot
         .data()!['followers']
         .contains(FirebaseAuth.instance.currentUser!.uid);
-
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted){
+      setState(() {
+        isLoading = false;
+      });
+    }
+    
   }
 
   @override
@@ -101,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 CircleAvatar(
                   radius: 52,
-                  backgroundColor: Colors.grey,
+                  backgroundColor: darkColor,
                   backgroundImage: NetworkImage(userData['photoUrl'].toString()),
                 ),
                 const SizedBox(
@@ -154,7 +157,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             MaterialPageRoute(
                               builder: (context) => EditProfileScreen(uid: widget.uid),
                             ),
-                          );
+                          ).then((value) {
+                            setState(() {
+                              getUserData();
+                            });
+                          });
                         },)
                     : isFollowing ? ProfileButton(      //nếu follow = true (đang follow) thì hiện nút unfollow
                         buttonColor: Colors.white,
@@ -182,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       ),
                 const SizedBox( height: 16,),
-                FutureBuilder(
+                FutureBuilder(                                  //hiển thị các post dưới dạng grid
                   future: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).get(),
                   builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -199,7 +206,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           childAspectRatio: 1,
                         ), 
                         itemBuilder: (context, index) {
-                          return Container(
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PostDetailScreen(snap: snapshot,),
+                                ),
+                              );
+                            },
                             child: Image(
                               fit: BoxFit.cover,
                               image: NetworkImage(snapshot.data!.docs[index]

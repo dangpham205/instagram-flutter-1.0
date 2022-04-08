@@ -59,14 +59,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showSnackBar(context, res);
     }
     else{
-      Navigator.of(context).pushReplacement(      //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
-      MaterialPageRoute(
-        builder: (context) => const ResponsiveLayout(
+      Future.delayed(const Duration(milliseconds: 1500)).then((value) {
+        return Navigator.of(context).pushReplacement(      //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
+          MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
                                                 webScreenLayout: WebScreenLayout(),
                                                 mobileScreenLayout: MobileScreenLayout(),
                                               ),
-      ),
-    );
+          ),
+        );
+      });
     }
 
     setState(() {
@@ -107,6 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                   : const CircleAvatar(   //còn không thì hiện avt mặc định
                     radius: 64,
+                    backgroundColor: darkColor,
                     backgroundImage: NetworkImage('https://images.squarespace-cdn.com/content/v1/54b7b93ce4b0a3e130d5d232/1519987020970-8IQ7F6Z61LLBCX85A65S/icon.png?format=1000w'),
                   ),   //avatar mặc định
                   Positioned(     //nút thêm ảnh avatar

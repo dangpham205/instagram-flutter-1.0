@@ -23,12 +23,19 @@ class _PostCardState extends State<PostCard> {
   int numberOfComments = 0;
   bool postImageReady = false;
   String postImageUrl = '';
+  var userData = {};
+  String avatarUrl = '';
+  String username = '';
+  bool gettingUserData = false;
+  
+
 
   @override
   void initState() {
     super.initState();
     getNumberOfComments();
     loadPostImages();
+    getAvatarAndUsername();
   }
 
   void getNumberOfComments() async {
@@ -45,6 +52,25 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+  void getAvatarAndUsername() async {
+    setState(() {
+      gettingUserData = true;
+    });
+    var userSnapShot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.snap['uid'])
+        .get();
+    userData = userSnapShot.data()!;
+
+    avatarUrl = userData['photoUrl'].toString();
+    username = userData['username'].toString();
+    if (mounted){
+    setState(() {
+      gettingUserData = false;
+    });
+    }
+  }
+
   void loadPostImages() async {
     setState(() {
       postImageReady = false;
@@ -52,7 +78,7 @@ class _PostCardState extends State<PostCard> {
     postImageUrl = await widget.snap['postUrl'];
     setState(() {
         postImageReady = true;
-      });
+    });
   }
 
   @override
@@ -62,7 +88,9 @@ class _PostCardState extends State<PostCard> {
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(horizontal: 1),
-      child: Column(
+      child: gettingUserData ? const Center(child: CircularProgressIndicator(),)
+      :
+      Column(
         children: [
           Container(
             //container chứa avatar, tên ng dùng và dấu 3 chấm trên đầu bài viết
@@ -73,8 +101,8 @@ class _PostCardState extends State<PostCard> {
                 CircleAvatar(
                   //avatar
                   radius: 16,
-                  backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(widget.snap['avatarUrl']), //dùng snap lấy ra avatar của user
+                  backgroundColor: darkColor,
+                  backgroundImage: NetworkImage(avatarUrl), //dùng snap lấy ra avatar của user
                 ),
                 Expanded(
                   //username
@@ -85,7 +113,7 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.snap['username'], //dùng snap lấy ra username
+                          username, //dùng snap lấy ra username
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -262,8 +290,7 @@ class _PostCardState extends State<PostCard> {
                       style: const TextStyle(color: primaryColor),
                       children: [
                         TextSpan(
-                          text: widget
-                              .snap['username'], //dùng snap lấy ra username
+                          text: username, //dùng snap lấy ra username
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),

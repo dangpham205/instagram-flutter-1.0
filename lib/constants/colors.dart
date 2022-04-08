@@ -7,3 +7,4 @@ const blueColor = Color.fromRGBO(0, 149, 246, 1);
 const primaryColor = Colors.white;
 const secondaryColor = Colors.grey;
 const loginButton = Color.fromARGB(255, 110, 87, 240);
+const darkColor = Color.fromARGB(255, 19, 19, 19);

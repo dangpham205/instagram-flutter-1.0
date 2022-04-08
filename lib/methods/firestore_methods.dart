@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,7 +59,7 @@ class FirestoreMethods {
       }
     }
     catch(error){
-      print(error.toString());
+      log(error.toString());
     }
   }
 
@@ -82,11 +83,11 @@ class FirestoreMethods {
         });
       }
       else{
-        print('Comment is empty!!');
+        log('Comment is empty!!');
       }
     }
     catch(error){
-      print(error.toString());
+      log(error.toString());
     }
   }
 
@@ -95,7 +96,7 @@ class FirestoreMethods {
       await _firestore.collection('posts').doc(postId).delete();
     }
     catch(error){
-      print(error.toString());
+      log(error.toString());
     }
   }
 
@@ -117,7 +118,7 @@ class FirestoreMethods {
       }
     }
     catch (error) {
-      print(error.toString());
+      log(error.toString());
     }
   }
 }

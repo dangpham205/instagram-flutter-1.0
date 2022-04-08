@@ -37,15 +37,14 @@ stream builder sẽ sử dụng để lắng nghe real time
 với những thứ kh cần hiển thị real time thì sd future builder
 vd như show tất cả post trong profile
 
-doc của post chỉ nên chứa:
+doc của post chỉ nên chứa (khi upload post):
 	des
 	uid
 	uploadDate
 	likes,
 	postID
 	postUrl
-	avatar
 không cần username vì sau nếu user update lại
 username thì prop đó trong post không sửa theo đc
 cái đó dựa vào uid để lấy ra
-
+cả avatar cũng tương tự
