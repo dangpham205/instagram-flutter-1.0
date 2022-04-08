@@ -22,14 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();      //very important
-    _passwordController.dispose();
-  }
-
   void loginUser() async {
     setState(() {
       _isLoading = true;
@@ -37,22 +29,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
     String res = await AuthMethods().logIn(email: _emailController.text, password: _passwordController.text);
     if (res == 'Log In Succeed'){   //succeed thif chuyen sang trang main
-      Navigator.of(context).pushReplacement(    //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
-      MaterialPageRoute(
-        builder: (context) => const ResponsiveLayout(
-                                                webScreenLayout: WebScreenLayout(),
-                                                mobileScreenLayout: MobileScreenLayout(),
-                                              ),
-      ),
-    );
+      if (mounted){
+        Navigator.of(context).pushReplacement(    //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+                                                  webScreenLayout: WebScreenLayout(),
+                                                  mobileScreenLayout: MobileScreenLayout(),
+                                                ),
+          ),
+        );
+      }
     }
     else{
       showSnackBar(context, res);
     }
-
-    setState(() {
-      _isLoading = false;
-    }); 
+    if(mounted){
+      setState(() {
+        _isLoading = false;
+      }); 
+    }
   }
 
   void navigateToSignUp() {
@@ -63,6 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();      //very important
+    _passwordController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

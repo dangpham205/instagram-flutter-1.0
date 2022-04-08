@@ -89,10 +89,8 @@ class _UploadScreenState extends State<UploadScreen> {
     try{
       String res = await FirestoreMethods().uploadPost(
           uid, 
-          username, 
           _descriptionController.text, 
           _image!, 
-          avatarUrl
       );
 
       if (res == 'Upload Succeed'){

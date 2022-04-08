@@ -11,10 +11,8 @@ class FirestoreMethods {
   //upload Post
   Future<String> uploadPost(
     String uid,
-    String username,
     String description,
     Uint8List image,    //đây là file truyền vô để upload lên storage
-    String avatarUrl
   ) async {
     
     String res = 'Upload Failed';
@@ -25,12 +23,10 @@ class FirestoreMethods {
 
       Post post = Post(
           uid: uid,
-          username: username,
           postId: postId,
           description: description,
           uploadDate: DateTime.now(),
           postUrl: photoUrl,
-          avatarUrl: avatarUrl,
           likes: []);
       
       _firestore.collection('posts').doc(postId).set(post.toJSON());    //up post lên firebase
