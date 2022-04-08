@@ -8,6 +8,7 @@ import 'package:instagram/screens/edit_profile_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/screens/post_detail_screen.dart';
 import 'package:instagram/widgets/profile_button.dart';
+import 'package:instagram/widgets/yes_no_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -87,8 +88,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           FirebaseAuth.instance.currentUser!.uid == widget.uid ? IconButton(              //log out
             onPressed: () async {
-              await AuthMethods().signOut();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+              showDialog(context: context, builder: (context) => YesNoDialog(
+                function: () async {
+                  await AuthMethods().signOut();
+                  // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()),
+                    (route) => false,
+                  );
+                },
+                title: 'Log Out', 
+                content: 'Do you really want to log out? :('));
             },
             icon: const Icon(Icons.logout)
           ) : const SizedBox(),

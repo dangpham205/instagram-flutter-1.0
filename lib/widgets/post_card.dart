@@ -93,6 +93,10 @@ class _PostCardState extends State<PostCard> {
       Column(
         children: [
           Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(26.0)),
+              color: darkColor,
+            ),
             //container chứa avatar, tên ng dùng và dấu 3 chấm trên đầu bài viết
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12)
                 .copyWith(right: 0),
@@ -174,14 +178,22 @@ class _PostCardState extends State<PostCard> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: postImageReady == false ?
-                  const Center(child: Text('Waiting for internet connection', style: TextStyle(color: Colors.white),),)
-                  : Image.network(
-                    postImageUrl,
-                    fit: BoxFit.fitWidth,
-                  ), //dùng snap lấy url ảnh bài post
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: Colors.grey, width: 0.2),
+                      bottom: BorderSide(color: Colors.grey, width: 0.2),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: postImageReady == false ?
+                    const Center(child: Text('Waiting for internet connection', style: TextStyle(color: Colors.white),),)
+                    : Image.network(
+                      postImageUrl,
+                      fit: BoxFit.fitWidth,
+                    ), //dùng snap lấy url ảnh bài post
+                  ),
                 ),
                 AnimatedOpacity(
                   opacity: isLikeDisplaying ? 1 : 0,
@@ -211,66 +223,73 @@ class _PostCardState extends State<PostCard> {
           ),
 
           //like comment share
-          Row(
-            children: [
-              LikeAnimation(
-                // isDisplaying: true,
-                isDisplaying: widget.snap['likes'].contains(user!.uid),
-                smallLike:
-                    true, //smallLike là like bằng nút like, mặc định là false(like bằng double   tap)
-                child: IconButton(
-                  //LIKE
-                  onPressed: () async {
-                    await FirestoreMethods().likePost(
-                      widget.snap['postId'],
-                      user.uid,
-                      widget.snap['likes'],
+          Container(
+            color: darkColor,
+            child: Row(
+              children: [
+                LikeAnimation(
+                  // isDisplaying: true,
+                  isDisplaying: widget.snap['likes'].contains(user!.uid),
+                  smallLike:
+                      true, //smallLike là like bằng nút like, mặc định là false(like bằng double   tap)
+                  child: IconButton(
+                    //LIKE
+                    onPressed: () async {
+                      await FirestoreMethods().likePost(
+                        widget.snap['postId'],
+                        user.uid,
+                        widget.snap['likes'],
+                      );
+                    },
+                    icon: widget.snap['likes'].contains(user.uid) ? 
+                      const Icon(
+                        Icons.thumb_up,
+                        color: Colors.blue,)
+                      : const Icon(
+                        Icons.thumb_up,)
+                  ),
+                ),
+                IconButton(
+                  //COMMENT
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentScreen(snap: widget.snap),
+                      ),
                     );
                   },
-                  icon: widget.snap['likes'].contains(user.uid) ? 
-                    const Icon(
-                      Icons.thumb_up,
-                      color: Colors.blue,)
-                    : const Icon(
-                      Icons.thumb_up,)
+                  icon: const Icon(
+                    Icons.comment,
+                  ),
                 ),
-              ),
-              IconButton(
-                //COMMENT
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CommentScreen(snap: widget.snap),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.comment,
+                IconButton(
+                  //SEND
+                  onPressed: () {},
+                  icon: const Icon(Icons.send),
                 ),
-              ),
-              IconButton(
-                //SEND
-                onPressed: () {},
-                icon: const Icon(Icons.send),
-              ),
-              Expanded(
-                child: Align(
-                  //ARCHIVE
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.bookmark_border,
+                Expanded(
+                  child: Align(
+                    //ARCHIVE
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.bookmark_border,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           //CAPTION VÀ SỐ LIKE, NUMBER OF COMMENT
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(26.0)),
+              color: darkColor,
+            ),
+            padding: const EdgeInsets.only(left: 8,right: 8, bottom: 16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,7 +356,8 @@ class _PostCardState extends State<PostCard> {
                 ),
               ],
             ),
-          )
+          ),
+          const SizedBox(height: 20,),
         ],
       ),
     );
