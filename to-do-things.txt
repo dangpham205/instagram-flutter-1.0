@@ -1,0 +1,22 @@
+futurebuilder
+fromJson()
+
+thêm chức năng: 
+bạn đã mở app bnh lần
+chỉ show bài viết của ng nào mình follow
+saved bài viết
+navigation drawer		check
+thay logo svg			check
+vô profile ngkhac khi bấm vào tên(post card và post detailscreen)			check
+edit caption
+chat
+notify khi có ng follow hay like(comment nếu rảnh)
+làm animation cho profile drawer (nếu có thể)
+
+lưu lại email để khi đăng nhập kh cần nhập lại
+(secure storage)
+tham khảo trên chrome (widget chung)
+
+scaffold có 2 body, tắt đc 1 body
+
+
