@@ -2,14 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/constants/colors.dart';
-import 'package:instagram/methods/auth_methods.dart';
 import 'package:instagram/methods/firestore_methods.dart';
 import 'package:instagram/screens/edit_profile_screen.dart';
-import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/screens/post_detail_screen.dart';
 import 'package:instagram/widgets/profile_button.dart';
 import 'package:instagram/widgets/profile_drawer.dart';
-import 'package:instagram/widgets/yes_no_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -220,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => StreamBuilder(
-                                    stream: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).snapshots(),
+                                    stream: FirebaseFirestore.instance.collection('posts').snapshots(),
                                     builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                       if (snapshot.connectionState == ConnectionState.waiting){
                                         return const Center(

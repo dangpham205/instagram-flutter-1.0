@@ -20,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           },
         ),
       ),
-      body: Center(child: Text('Setting Screen')),
+      body: const Center(child: Text('Setting Screen')),
     );
   }
 }

@@ -30,6 +30,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   String username = '';
   bool isLikeDisplaying = false; //mặc định thì like sẽ không hiển thị lên
   final TextEditingController _commentController = TextEditingController();
+  FocusNode focusNode = FocusNode();
+
 
 
   @override
@@ -41,6 +43,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   @override
   void dispose() {
+    focusNode.dispose();
     super.dispose();
     _commentController.dispose();
   }
@@ -143,7 +146,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           ),
                         ),
                       ),
-                      IconButton(
+                      widget.snap['uid'].toString() == user!.uid.toString() ? IconButton(
                         //3 chấm options
                         icon: const Icon(Icons.more_vert),
                         onPressed: () {
@@ -155,7 +158,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                     const EdgeInsets.symmetric(vertical: 8),
                                 shrinkWrap: true,
                                 children: [
-                                  widget.snap['uid'].toString() == user!.uid.toString() ?
                                   InkWell(
                                     onTap: () async {
                                       Navigator.of(context).pop();      
@@ -178,8 +180,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                             horizontal: 16),
                                       child: const Text('Delete'),
                                     ),
-                                  )
-                                  : const SizedBox(), 
+                                  ), 
                                   InkWell(
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
@@ -196,7 +197,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                           );
                         },
-                      ),
+                      ) : const SizedBox(),
                     ],
                   ),
                 ) ,
@@ -207,7 +208,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 onDoubleTap: () async {
                   await FirestoreMethods().likePost(
                     widget.snap['postId'],
-                    user!.uid,
+                    user.uid,
                     widget.snap['likes'],
                   );
                   setState(() {
@@ -265,7 +266,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 children: [
                   LikeAnimation(
                     // isDisplaying: true,
-                    isDisplaying: widget.snap['likes'].contains(user!.uid),
+                    isDisplaying: widget.snap['likes'].contains(user.uid),
                     smallLike:
                         true, //smallLike là like bằng nút like, mặc định là false(like bằng double   tap)
                     child: IconButton(
@@ -290,13 +291,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   ),
                   IconButton(
                     //COMMENT
-                    onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => CommentScreen(snap: widget.snap),
-                      //   ),
-                      // );
-                    },
+                    onPressed: () => focusNode.requestFocus(),
                     icon: const Icon(
                       Icons.comment,
                     ),
@@ -426,6 +421,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12, right: 4),
                   child: TextField(
+                    focusNode: focusNode,
                     controller: _commentController,
                     style: const TextStyle(fontSize: 14),
                     decoration: const InputDecoration(
@@ -444,6 +440,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       user.photoUrl,
                       _commentController.text,
                   );
+                  FocusManager.instance.primaryFocus?.unfocus();    //tắt bàn phím sau khi comment đc up lên
                   _commentController.text = '';         //sau khi comment xong thi set phần comment về trống không
                 },
                 child: Container(

@@ -91,31 +91,29 @@ class _ExploreScreenState extends State<ExploreScreen> {
       )
       : FutureBuilder(
         future: FirebaseFirestore.instance.collection('posts').get(),
-        builder:(context, snapshot) {
-          if (!snapshot.hasData){
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+        builder:(context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(),);
           }
           else{
             return StaggeredGridView.countBuilder(
               crossAxisCount: 3, 
-              itemCount: (snapshot.data! as dynamic).docs.length,
+              itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) => 
                     InkWell(
-                      child: Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.cover,),
+                      child: Image.network(snapshot.data!.docs[index]['postUrl'], fit: BoxFit.cover,),
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => StreamBuilder(
-                              stream: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: (snapshot.data! as dynamic).docs[index]['uid']).snapshots(),
+                              stream: FirebaseFirestore.instance.collection('posts').snapshots(),
                               builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting){
                                   return const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 }
-                                return PostDetailScreen(snap: (snapshot.data! as dynamic).docs[index].data());
+                                return PostDetailScreen(snap: snapshot.data!.docs[index].data());
                               }
                             ),
                             //  PostDetailScreen(snap: snapshot.data!.docs[index].data(),),

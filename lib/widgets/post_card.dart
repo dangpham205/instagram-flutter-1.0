@@ -137,7 +137,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                   ),
-                  IconButton(
+                  widget.snap['uid'].toString() == user!.uid.toString() ? IconButton(
                     //3 chấm options
                     onPressed: () {
                       showDialog(
@@ -148,7 +148,7 @@ class _PostCardState extends State<PostCard> {
                                 const EdgeInsets.symmetric(vertical: 8),
                             shrinkWrap: true,
                             children: [
-                              widget.snap['uid'].toString() == user!.uid.toString() ?
+                              
                               InkWell(
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -171,8 +171,7 @@ class _PostCardState extends State<PostCard> {
                                     ),
                                   );
                                 },
-                              )
-                              : const SizedBox(), 
+                              ), 
                               InkWell(
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -190,7 +189,7 @@ class _PostCardState extends State<PostCard> {
                       );
                     },
                     icon: const Icon(Icons.more_vert),
-                  ),
+                  ) : const SizedBox(),
                 ],
               ),
             ),
@@ -201,7 +200,7 @@ class _PostCardState extends State<PostCard> {
             onDoubleTap: () async {
               await FirestoreMethods().likePost(
                 widget.snap['postId'],
-                user!.uid,
+                user.uid,
                 widget.snap['likes'],
               );
               setState(() {
@@ -262,7 +261,7 @@ class _PostCardState extends State<PostCard> {
               children: [
                 LikeAnimation(
                   // isDisplaying: true,
-                  isDisplaying: widget.snap['likes'].contains(user!.uid),
+                  isDisplaying: widget.snap['likes'].contains(user.uid),
                   smallLike:
                       true, //smallLike là like bằng nút like, mặc định là false(like bằng double   tap)
                   child: IconButton(

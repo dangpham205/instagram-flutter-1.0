@@ -92,6 +92,7 @@ class _CommentScreenState extends State<CommentScreen> {
                       user.photoUrl,
                       _commentController.text,
                   );
+                  FocusManager.instance.primaryFocus?.unfocus(); //tắt bàn phím sau khi comment đc up lên
                   _commentController.text = '';         //sau khi comment xong thi set phần comment về trống không
                 },
                 child: Container(
