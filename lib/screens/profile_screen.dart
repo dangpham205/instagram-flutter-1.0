@@ -8,6 +8,7 @@ import 'package:instagram/screens/edit_profile_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/screens/post_detail_screen.dart';
 import 'package:instagram/widgets/profile_button.dart';
+import 'package:instagram/widgets/profile_drawer.dart';
 import 'package:instagram/widgets/yes_no_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -75,6 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return isLoading ? const Center(
@@ -82,24 +85,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     )
     :
     Scaffold(
+      endDrawer: const ProfileDrawer() ,
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: Text(userData['username'].toString()),
         actions: [
-          FirebaseAuth.instance.currentUser!.uid == widget.uid ? IconButton(              //log out
-            onPressed: () async {
-              showDialog(context: context, builder: (context) => YesNoDialog(
-                function: () async {
-                  await AuthMethods().signOut();
-                  // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
-                  Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()),
-                    (route) => false,
-                  );
-                },
-                title: 'Log Out', 
-                content: 'Do you really want to log out? :('));
+          FirebaseAuth.instance.currentUser!.uid != widget.uid ? IconButton(      //nếu mở trang profile không phải của bản thân (tức là đang vô xem profile ngkhac) thì cần cho phép pop để quay lại (ví dụ về màn home, search)
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.of(context).pop();
             },
-            icon: const Icon(Icons.logout)
+          ) : const SizedBox(),
+          FirebaseAuth.instance.currentUser!.uid == widget.uid ?  IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
           ) : const SizedBox(),
         ],
       ),

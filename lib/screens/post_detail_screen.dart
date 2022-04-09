@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/screens/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -106,87 +107,98 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 //container chứa avatar, tên ng dùng và dấu 3 chấm trên đầu bài viết
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20)
                     .copyWith(right: 0),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      //avatar
-                      radius: 16,
-                      backgroundColor: darkColor,
-                      backgroundImage: NetworkImage(avatarUrl), //dùng snap lấy ra avatar của user
-                    ),
-                    Expanded(
-                      //username
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              username, //dùng snap lấy ra username
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          uid: widget.snap['uid'],
                         ),
                       ),
-                    ),
-                    IconButton(
-                      //3 chấm options
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            child: ListView(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
-                              shrinkWrap: true,
-                              children: [
-                                widget.snap['uid'].toString() == user!.uid.toString() ?
-                                InkWell(
-                                  onTap: () async {
-                                    Navigator.of(context).pop();      
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => YesNoDialog(
-                                        title: 'Delete',
-                                        content:
-                                            'Do you really want to delete this post?',
-                                        function: () async {
-                                          FirestoreMethods().deletePost(widget.snap['postId']);
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16),
-                                    child: const Text('Delete'),
-                                  ),
-                                )
-                                : const SizedBox(), 
-                                InkWell(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  onTap: () async {
-                                    Navigator.of(context).pop(); 
-                                  }
-                                )
-                              ],
-                            ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        //avatar
+                        radius: 16,
+                        backgroundColor: darkColor,
+                        backgroundImage: NetworkImage(avatarUrl), //dùng snap lấy ra avatar của user
+                      ),
+                      Expanded(
+                        //username
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                username, //dùng snap lấy ra username
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                      ),
+                      IconButton(
+                        //3 chấm options
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                              child: ListView(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                shrinkWrap: true,
+                                children: [
+                                  widget.snap['uid'].toString() == user!.uid.toString() ?
+                                  InkWell(
+                                    onTap: () async {
+                                      Navigator.of(context).pop();      
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => YesNoDialog(
+                                          title: 'Delete',
+                                          content:
+                                              'Do you really want to delete this post?',
+                                          function: () async {
+                                            FirestoreMethods().deletePost(widget.snap['postId']);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 16),
+                                      child: const Text('Delete'),
+                                    ),
+                                  )
+                                  : const SizedBox(), 
+                                  InkWell(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 16),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    onTap: () async {
+                                      Navigator.of(context).pop(); 
+                                    }
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ) ,
               ),
                   
