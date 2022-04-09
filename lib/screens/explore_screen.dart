@@ -41,8 +41,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
         actions: [
           showSearchResults ? IconButton(                                   //tawts phaanf ket qua cua search
             onPressed: () {
-              setState(() {
-              });
+              Navigator.of(context).pushReplacement(    //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
+              MaterialPageRoute(
+                builder: (context) => const ExploreScreen(),
+                ),
+              );
             },
             icon: const Icon(Icons.close)
           ) 
@@ -77,7 +80,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(snapshot.data!.docs[index].data()['photoUrl'].toString()),
                         ),
-                        title: Text(snapshot.data!.docs[index].data()['username']),
+                        title: Text(snapshot.data!.docs[index].data()['username'].toString()),
                   ),
                 );
               }
