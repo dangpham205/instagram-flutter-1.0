@@ -136,7 +136,14 @@ class _PostCardState extends State<PostCard> {
                               const EdgeInsets.symmetric(vertical: 8),
                           shrinkWrap: true,
                           children: [
+                            widget.snap['uid'].toString() == user!.uid.toString() ?
                             InkWell(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 16),
+                                child: const Text('Delete'),
+                              ),
                               onTap: () async {
                                 Navigator.of(context).pop();      
                                 showDialog(
@@ -152,13 +159,19 @@ class _PostCardState extends State<PostCard> {
                                   ),
                                 );
                               },
+                            )
+                            : const SizedBox(), 
+                            InkWell(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                       vertical: 12,
                                       horizontal: 16),
-                                child: const Text('Delete'),
+                                child: const Text('Cancel'),
                               ),
-                            ), 
+                              onTap: () async {
+                                Navigator.of(context).pop(); 
+                              }
+                            )
                           ]
                           // .map(
                           //   (e) => InkWell(

@@ -219,7 +219,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => PostDetailScreen(snap: snapshot,),
+                                  builder: (context) => StreamBuilder(
+                                    stream: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).snapshots(),
+                                    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting){
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      return PostDetailScreen(snap: snapshot.data!.docs[index].data());
+                                    }
+                                  ),
+                                  //  PostDetailScreen(snap: snapshot.data!.docs[index].data(),),
                                 ),
                               );
                             },

@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: mobileBackgroundColor,
         centerTitle: false,
         title: SvgPicture.asset(                  //logo app
-          'assets/ic_instagram.svg',
+          'assets/of_logo.svg',
           color: primaryColor,
           height: 36,
         ),

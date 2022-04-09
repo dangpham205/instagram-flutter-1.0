@@ -2,6 +2,10 @@ get sha1:
 cd tới android
 gradlew signingReport 
 
+KHI TẠO PROJECT PHẢI TẠO DOMAIN RIÊNG
+COM.ÁDASD.CÁDADADS 
+NẾU KHÔNG THÌ KHÔNG PUBLISH LÊN GG PLAY ĐC
+
 chỉ có thể override setstate trong class state
 
 trong firebaseStorage

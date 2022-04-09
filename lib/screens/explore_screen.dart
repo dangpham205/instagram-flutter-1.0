@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:instagram/constants/colors.dart';
+import 'package:instagram/screens/post_detail_screen.dart';
 import 'package:instagram/screens/profile_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -101,7 +102,27 @@ class _ExploreScreenState extends State<ExploreScreen> {
               crossAxisCount: 3, 
               itemCount: (snapshot.data! as dynamic).docs.length,
               itemBuilder: (context, index) => 
-                    Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.cover,),
+                    InkWell(
+                      child: Image.network((snapshot.data! as dynamic).docs[index]['postUrl'], fit: BoxFit.cover,),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => StreamBuilder(
+                              stream: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: (snapshot.data! as dynamic).docs[index]['uid']).snapshots(),
+                              builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting){
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return PostDetailScreen(snap: (snapshot.data! as dynamic).docs[index].data());
+                              }
+                            ),
+                            //  PostDetailScreen(snap: snapshot.data!.docs[index].data(),),
+                          ),
+                        );
+                      },
+                    ),
               staggeredTileBuilder: (index) => StaggeredTile.count(
                 (index % 7 == 0) ? 2 : 1,     //cross axis cells count
                 (index % 7 == 0) ? 2 : 1,     //main axis cells count
