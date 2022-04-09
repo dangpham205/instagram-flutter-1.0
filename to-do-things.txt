@@ -2,7 +2,7 @@ futurebuilder
 fromJson()
 
 thêm chức năng: 
-bạn đã mở app bnh lần
+bạn đã mở app bnh lần (tổng lần/ tổng ngày)
 chỉ show bài viết của ng nào mình follow
 saved bài viết
 navigation drawer		check
