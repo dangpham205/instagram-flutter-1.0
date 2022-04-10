@@ -170,6 +170,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                           function: () async {
                                             FirestoreMethods().deletePost(widget.snap['postId']);
                                             Navigator.of(context).pop();
+                                            Navigator.of(context).pop();    
+                                            //sau khi xóa thì pop cái dialog yes no xong pop quay lại màn trc luôn
+                                            
                                           },
                                         ),
                                       );

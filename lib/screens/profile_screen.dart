@@ -229,7 +229,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   //  PostDetailScreen(snap: snapshot.data!.docs[index].data(),),
                                 ),
-                              );
+                              ).then((value) {          
+                                setState(() {
+                                  getUserData();
+                                });
+                              });
                             },
                             child: Image(
                               fit: BoxFit.cover,

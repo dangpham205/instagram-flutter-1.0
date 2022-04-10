@@ -118,7 +118,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             ),
                             //  PostDetailScreen(snap: snapshot.data!.docs[index].data(),),
                           ),
-                        );
+                        ).then((value) {
+                          setState(() {
+                            
+                          });
+                        });
                       },
                     ),
               staggeredTileBuilder: (index) => StaggeredTile.count(
