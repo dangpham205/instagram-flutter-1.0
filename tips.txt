@@ -52,3 +52,24 @@ không cần username vì sau nếu user update lại
 username thì prop đó trong post không sửa theo đc
 cái đó dựa vào uid để lấy ra
 cả avatar cũng tương tự
+
+khi chỉ show những bài post của mình + những người mình follow ra
+ý tưởng sẽ là lọc trong collection 'post', kiếm những bài post có
+uid nằm trong current.user.following và uid trùng với id bản thân
+===> tức là khi query where sẽ xài (uid, whereIn=current.following)
+	và where(uid, isEqualTo(current.uid))
+	NHƯNG firebase không cho phép dùng orderby khi xài 2 điều kiện đó vì nó kh có khả năng scale khi có quá nhiều document
+===> Nên khi muốn orderby('uploadDate', descending = true) 
+thì cần cung cấp thêm 1 index field để sort(TH này là uid, ascending)	==> tổng cộng cần 2 field để có thể sort
+==> 2 cách tạo COMPOSITE INDEX để có thể order:
+		+	Vô firestore database trên web tab Indexes và tạo 1 composite index
+			(collection: posts, field indexes: uid ascending, uploadDate descending, queryScope: collection)
+		+ 	Không cần tạo bằng tay, cứ code thêm phần .orderby('uploadDate', descending = true)
+			==> lúc này chạy mà chưa tạo composite index thì sẽ không có kết quả
+				nhưng vô DEBUG CONSOLE lúc này firebase sẽ gợi ý 1 đường link mà nó sẽ tự động tạo composite index đó cho
+				bấm vô link và đợi nó build xong thì chạy lại sẽ được
+				Tương tự như sau:
+				W/Firestore(26503): (24.0.2) [Firestore]: Listen for Query(target=Query(posts where uid in [uoGSPdSLGgNnW04yUIFQiWXqWsH2,rmtcIxEBbISgN0b3aMyLUySuY2N2] 
+				order by uploadDate, __name__);limitType=LIMIT_TO_FIRST) failed: Status{code=FAILED_PRECONDITION, description=The query requires an index. 
+				You can create it here: https://console.firebase.google.com/v1/r/project/instagram-flutter-7c654/firestore/indexes?create_composite=ClVwcm9qZWN0cy9pbnN0YWdyYW0tZmx1dHRlci03YzY
+				1NC9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcG9zdHMvaW5kZXhlcy9fEAEaBwoDdWlkEAEaDgoKdXBsb2FkRGF0ZRABGgwKCF9fbmFtZV9fEAE, cause=null}

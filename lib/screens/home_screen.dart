@@ -2,13 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram/constants/colors.dart';
+import 'package:instagram/models/user.dart' as model;
 import 'package:instagram/widgets/post_card.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final model.User? user = Provider.of<UserProvider>(context).getUser; //lấy ra th user hiện tại
+
     return Scaffold(
       appBar: AppBar(                                   //app bar
         backgroundColor: mobileBackgroundColor,
@@ -25,8 +32,15 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder(                              //dùng stream để load ra các post
-        stream: FirebaseFirestore.instance.collection('posts').orderBy('uploadDate', descending: true).snapshots(),
+      body: user!.following.isEmpty ?       //nếu không có follow ai thì  trả về empty
+      const SizedBox()
+      : StreamBuilder(                              //dùng stream để load ra các post
+              stream: FirebaseFirestore.instance
+                  .collection('posts')
+                  .where('uid', isEqualTo: user.uid)
+                  .where('uid', whereIn: user.following)
+                  .orderBy('uploadDate', descending: true)
+                  .snapshots(),
         //stream sẽ là các bài post, khi có các bài post mới đc add lên, stream builder sẽ build lại
         builder:(context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           //mặc định thì builder sẽ có snapshot
@@ -41,7 +55,9 @@ class HomeScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-
+          if (snapshot.data == null){         //nếu trong những người follow mà kh ai có post gì thì trả về empty
+            return const SizedBox();
+          }
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
             itemCount: snapshot.data!.docs.length,      //bắt buộc phải truyền vô
