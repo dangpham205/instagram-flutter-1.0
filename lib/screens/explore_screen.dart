@@ -42,7 +42,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         actions: [
           showSearchResults ? IconButton(                                   //tawts phaanf ket qua cua search
             onPressed: () {
-              Navigator.of(context).pushReplacement(    //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
+              Navigator.of(context).push(    //nếu chỉ dùng push thì bấm back vẫn có thể quay lại screen trc
               MaterialPageRoute(
                 builder: (context) => const ExploreScreen(),
                 ),
