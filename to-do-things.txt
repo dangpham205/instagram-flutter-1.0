@@ -7,7 +7,6 @@ thêm chức năng:
 --edit caption
 --chat
 --notify khi có ng follow hay like(comment nếu rảnh)
---làm animation cho profile drawer (nếu có thể)
 --đổi password
 --xem được danh sách follower, following
 --lưu lại email để khi đăng nhập kh cần nhập lại
@@ -24,7 +23,8 @@ thì sau khi xóa cần pop hẳn về màn trước để refresh lại màn
 (cập nhật lại)
 ý tưởng: thêm biến atExplore?, nếu true thì không cho phép xóa,
 chỉ cho phép user xóa khi ở trang profile hoặc home
-
+--folder chứa các methods firebase sẽ có tên là 'shared' (giống trong sách)
+--lắng nghe internet connection
 
 scaffold có 2 body, tắt đc 1 body
 
