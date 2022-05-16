@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:instagram/responsive/web_screen_layout.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:instagram/screens/login_screen.dart';
 import 'package:provider/provider.dart';
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb){

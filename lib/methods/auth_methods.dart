@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:instagram/methods/storage_methods.dart';
@@ -9,7 +8,6 @@ class AuthMethods {
 
   final FirebaseAuth _auth = FirebaseAuth.instance; 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
 
   Future<model.User> getUserInfo() async{
     User currentUser = _auth.currentUser!;      //lấy thằng current User ra

@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:instagram/constants/colors.dart';
 import 'package:instagram/models/user.dart' as model;
 import 'package:instagram/widgets/post_card.dart';
-import 'package:provider/provider.dart';
-
 import '../providers/user_provider.dart';
 
 class HomeScreen extends StatelessWidget {
